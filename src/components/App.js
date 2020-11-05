@@ -1,7 +1,6 @@
 import React from "react";
 import "./../styles/App.css";
 import ListView from "./ListView";
-import EditBox from "./EditBox";
 
 export default function App() {
   const [newItem, setNewItem] = React.useState("");
@@ -13,47 +12,46 @@ export default function App() {
     if (newToDo === "") {
       return;
     }
-    if (list.includes(newToDo)) {
+    let presentTask = list.map(item => item.task);
+    if (presentTask.includes(newToDo)) {
+      setEditItem("");
       return;
     }
-    let newList = [...list, newToDo];
+    let newToDoObj = {
+      task: newToDo,
+      edit: false
+    }
+    let newList = [...list, newToDoObj];
     setList(newList);
     setNewItem("");
   };
   const handleChange = (event) => {
     setNewItem(event.target.value);
   };
-
+  const handleEditChange = (event) => {
+    setEditItem(event.target.value);
+  };
+  const saveEditToDo = () => {
+    let listToEdit = [...list];
+    listToEdit[editIndex].task = editItem;
+    listToEdit[editIndex].edit = false;
+    setList(listToEdit);
+    setEditIndex(-1);
+    setEditItem("");
+  };
   const handleDelete = (index) => {
     let listToUpdate = [...list];
     listToUpdate.splice(index, 1);
     setList(listToUpdate);
   };
-  const handleEditChange = (event) => {
-    setEditItem(event.target.value);
-    console.log(editItem);
-  };
-  const saveEditToDo = () => {
-    let listToEdit = [...list];
-    console.log(listToEdit);
-    listToEdit[editIndex] = newItem;
-    setList(listToEdit);
-    setEditIndex(-1);
-  };
+  
   const handleEdit = (index) => {
-    let newRender = (
-      <EditBox
-        editItem={editItem}
-        handleEditChange={handleChange}
-        saveEditToDo={saveEditToDo}
-        value={editItem}
-      />
-    );
-    let listToRender = [...list];
+    let editObj = list[index];
+    editObj.edit = true;
+    let newEditList = [...list];
+    newEditList[index] = editObj;
     setEditIndex(index);
-    listToRender[index] = newRender;
-    setList(listToRender);
-    console.log(listToRender);
+    setList(newEditList);
   };
   return (
     <div id="main">
@@ -64,9 +62,13 @@ export default function App() {
       <br />
       {list.map((item, index) => (
         <ListView
-          item={item}
+          task={item.task}
+          edit={item.edit}
           key={index}
           serial={index}
+          editItem={editItem}
+          handleEditChange={handleEditChange}
+          saveEditToDo={saveEditToDo}
           handleDelete={() => handleDelete(index)}
           handleEdit={() => handleEdit(index)}
         />
@@ -74,5 +76,3 @@ export default function App() {
     </div>
   );
 }
-
-// https://codesandbox.io/s/suspicious-hermann-wg9dq?file=/src/App.js
