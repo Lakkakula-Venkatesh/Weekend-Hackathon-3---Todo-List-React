@@ -12,20 +12,24 @@ export default function ListView({
   editItem
 }) {
   return (
-    <li className="list">
-      {!edit ? (
-        task
-      ) : (
-        <EditBox
-          editItem={editItem}
-          handleEditChange={handleEditChange}
-          saveEditToDo={saveEditToDo}
-        />
-      )}
+    <>
+      <li className="list">
+        {!edit ? (
+          task
+        ) : (
+          <EditBox
+            editItem={editItem}
+            handleEditChange={handleEditChange}
+            saveEditToDo={saveEditToDo}
+          />
+        )}
+      </li>
       <button className="edit" style={{ margin: "5px" }} onClick={handleEdit}>
         Edit
       </button>
-      <button className="delete" onClick={handleDelete}>Delete</button>
-    </li>
+      <button className="delete" onClick={handleDelete}>
+        Delete
+      </button>
+    </>
   );
 }
