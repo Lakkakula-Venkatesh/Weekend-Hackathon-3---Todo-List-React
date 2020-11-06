@@ -12,7 +12,7 @@ export default function ListView({
   editItem
 }) {
   return (
-    <div className="list">
+    <li className="list">
       {!edit ? (
         task
       ) : (
@@ -26,6 +26,6 @@ export default function ListView({
         Edit
       </button>
       <button className="delete" onClick={handleDelete}>Delete</button>
-    </div>
+    </li>
   );
 }
